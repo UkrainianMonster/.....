@@ -28,7 +28,7 @@ public class MyGdx extends ApplicationAdapter {
 	Sound[] sndMosq = new Sound[3];
 
 	Mosquito[] mosq = new Mosquito[5];
-	Player[] players = new Player[5];
+	Player[] players = new Player[6];
 	Player player;
 	int frags;
 	long timeStart, timeCurrent;
@@ -36,30 +36,31 @@ public class MyGdx extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		// создание системных объектов
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, SCR_WIDTH, SCR_HEIGHT);
 		touch = new Vector3();
 		generateFont();
 
+		// создание изображений
 		imgBG = new Texture("background.jpg");
 		for (int i = 0; i < imgMosq.length; i++) {
 			imgMosq[i] = new Texture("mosq"+i+".png");
 		}
+
+		// создание звуков
 		for (int i = 0; i < sndMosq.length; i++) {
 			sndMosq[i] = Gdx.audio.newSound(Gdx.files.internal("mosq"+i+".mp3"));
 		}
 
-		for (int i = 0; i < mosq.length; i++) {
-			mosq[i] = new Mosquito();
-		}
-
+		// создание игроков для таблицы рекордов
 		for (int i = 0; i < players.length; i++) {
 			players[i] = new Player("Никто", 0);
 		}
 		player = new Player("Gamer", 0);
 
-		timeStart = TimeUtils.millis();
+		gameStart();
 	}
 
 	@Override
@@ -68,12 +69,16 @@ public class MyGdx extends ApplicationAdapter {
 		if(Gdx.input.justTouched()){
 			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touch);
-			for (int i = mosq.length-1; i >= 0; i--) {
-				if(mosq[i].isAlive && mosq[i].hit(touch.x, touch.y)) {
-					frags++;
-					sndMosq[MathUtils.random(0, 2)].play();
-					if(frags == mosq.length) gameOver();
-					break;
+			if(gameOver){
+				gameStart();
+			} else {
+				for (int i = mosq.length - 1; i >= 0; i--) {
+					if (mosq[i].isAlive && mosq[i].hit(touch.x, touch.y)) {
+						frags++;
+						sndMosq[MathUtils.random(0, 2)].play();
+						if (frags == mosq.length) gameOver();
+						break;
+					}
 				}
 			}
 		}
@@ -96,6 +101,7 @@ public class MyGdx extends ApplicationAdapter {
 		}
 		font.draw(batch, "УБИЙСТВА: "+frags, 10, SCR_HEIGHT-10);
 		font.draw(batch, timeToString(timeCurrent), SCR_WIDTH-200, SCR_HEIGHT-10);
+		if(gameOver) font.draw(batch, tableOfRecordsToString(), SCR_WIDTH/3f, SCR_HEIGHT/4f*3);
 		batch.end();
 	}
 	
@@ -108,12 +114,15 @@ public class MyGdx extends ApplicationAdapter {
 	}
 
 	void generateFont(){
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("russianpunk.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mr_insulag.otf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.color = new Color(1, 1, 0.4f, 1);
-		parameter.size = 40;
+		parameter.color = new Color(1, 0.8f, 0.4f, 1);
+		parameter.size = 50;
 		parameter.borderColor = Color.BLACK;
-		parameter.borderWidth = 3;
+		parameter.borderWidth = 2;
+		parameter.borderStraight = true;
+		parameter.shadowColor = new Color(0.1f, 0.1f, 0.1f, 0.8f);
+		parameter.shadowOffsetX = parameter.shadowOffsetY = 3;
 		String str = "";
 		for (char i = 0x20; i < 0x7B; i++) str += i;
 		for (char i = 0x401; i < 0x452; i++) str += i;
@@ -134,7 +143,8 @@ public class MyGdx extends ApplicationAdapter {
 			@Override
 			public void input(String text) {
 				player.name = text;
-				players[players.length-1] = player;
+				players[players.length-1].time = player.time;
+				players[players.length-1].name = player.name;
 				sortPlayers();
 			}
 
@@ -147,7 +157,36 @@ public class MyGdx extends ApplicationAdapter {
 		Gdx.input.getTextInput(new MyTextListener(), "Введите имя", player.name, "");
 	}
 
-	void sortPlayers(){
+	void gameStart(){
+		gameOver = false;
+		frags = 0;
+		timeStart = TimeUtils.millis();
+		// создание комаров
+		for (int i = 0; i < mosq.length; i++) {
+			mosq[i] = new Mosquito();
+		}
+	}
 
+	void sortPlayers(){
+		for (int i = 0; i < players.length; i++) if(players[i].time == 0) players[i].time = Long.MAX_VALUE;
+
+		for (int j = 0; j < players.length; j++) {
+			for (int i = 0; i < players.length-1; i++) {
+				if(players[i].time>players[i+1].time){
+					Player c = players[i];
+					players[i] = players[i+1];
+					players[i+1] = c;
+				}
+			}
+		}
+		for (int i = 0; i < players.length; i++) if(players[i].time == Long.MAX_VALUE) players[i].time = 0;
+	}
+
+	String tableOfRecordsToString(){
+		String s = "";
+		for (int i = 0; i < players.length-1; i++) {
+			s += players[i].name+"........"+timeToString(players[i].time)+"\n";
+		}
+		return s;
 	}
 }
