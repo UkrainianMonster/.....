@@ -14,7 +14,7 @@ public class Mosquito {
     Mosquito(){
         x = SCR_WIDTH/2f;
         y = SCR_HEIGHT/2f;
-        width = height = MathUtils.random(50, 150);
+        width = height = MathUtils.random(150, 150);
         vx = MathUtils.random(-5f, 5);
         vy = MathUtils.random(-5f, 5);
         faza = MathUtils.random(0, nFaz-1);

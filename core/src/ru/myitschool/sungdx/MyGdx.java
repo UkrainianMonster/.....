@@ -2,6 +2,7 @@ package ru.myitschool.sungdx;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class MyGdx extends ApplicationAdapter {
@@ -25,10 +27,12 @@ public class MyGdx extends ApplicationAdapter {
 	Texture imgBG;
 	Sound[] sndMosq = new Sound[3];
 
-	Mosquito[] mosq = new Mosquito[100];
+	Mosquito[] mosq = new Mosquito[5];
 	Player[] players = new Player[5];
+	Player player;
 	int frags;
 	long timeStart, timeCurrent;
+	boolean gameOver = false;
 	
 	@Override
 	public void create () {
@@ -53,6 +57,7 @@ public class MyGdx extends ApplicationAdapter {
 		for (int i = 0; i < players.length; i++) {
 			players[i] = new Player("Никто", 0);
 		}
+		player = new Player("Gamer", 0);
 
 		timeStart = TimeUtils.millis();
 	}
@@ -77,8 +82,9 @@ public class MyGdx extends ApplicationAdapter {
 		for (int i = 0; i < mosq.length; i++) {
 			mosq[i].move();
 		}
-		timeCurrent = TimeUtils.millis() - timeStart;
-		String timeStr = timeCurrent/1000/60/60+":"+timeCurrent/1000/60%60/10+timeCurrent/1000/60%60%10+":"+timeCurrent/1000%60/10+timeCurrent/1000%60%10;
+		if(!gameOver) {
+			timeCurrent = TimeUtils.millis() - timeStart;
+		}
 
 		// отрисовка всей графики
 		camera.update();
@@ -89,7 +95,7 @@ public class MyGdx extends ApplicationAdapter {
 			batch.draw(imgMosq[mosq[i].faza], mosq[i].getX(), mosq[i].getY(), mosq[i].width, mosq[i].height, 0, 0, 500, 500, mosq[i].isFlip(), false);
 		}
 		font.draw(batch, "УБИЙСТВА: "+frags, 10, SCR_HEIGHT-10);
-		font.draw(batch, timeStr, SCR_WIDTH-200, SCR_HEIGHT-10);
+		font.draw(batch, timeToString(timeCurrent), SCR_WIDTH-200, SCR_HEIGHT-10);
 		batch.end();
 	}
 	
@@ -116,7 +122,32 @@ public class MyGdx extends ApplicationAdapter {
 		generator.dispose();
 	}
 
+	String timeToString(long time){
+		return time/1000/60/60 + ":" + time/1000/60%60/10 + time/1000/60%60%10 + ":" + time/1000%60/10 + time/1000%60%10;
+	}
+
 	void gameOver(){
+		gameOver = true;
+		player.time = timeCurrent;
+
+		class MyTextListener implements Input.TextInputListener{
+			@Override
+			public void input(String text) {
+				player.name = text;
+				players[players.length-1] = player;
+				sortPlayers();
+			}
+
+			@Override
+			public void canceled() {
+
+			}
+		}
+
+		Gdx.input.getTextInput(new MyTextListener(), "Введите имя", player.name, "");
+	}
+
+	void sortPlayers(){
 
 	}
 }
