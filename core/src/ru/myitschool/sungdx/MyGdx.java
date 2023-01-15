@@ -155,7 +155,6 @@ public class MyGdx extends ApplicationAdapter {
 
 			}
 		}
-
 		Gdx.input.getTextInput(new MyTextListener(), "Введите имя", player.name, "");
 	}
 
@@ -167,6 +166,7 @@ public class MyGdx extends ApplicationAdapter {
 		for (int i = 0; i < mosq.length; i++) {
 			mosq[i] = new Mosquito();
 		}
+		loadTableOfRecords();
 	}
 
 	void sortPlayers(){
@@ -200,6 +200,17 @@ public class MyGdx extends ApplicationAdapter {
 				pref.putLong("time"+i, players[i].time);
 			}
 			pref.flush();
+		} catch (Exception e){
+		}
+	}
+
+	void loadTableOfRecords(){
+		try {
+			Preferences pref = Gdx.app.getPreferences("TableOfRecords");
+			for (int i = 0; i < players.length; i++) {
+				if(pref.contains("name"+i))	players[i].name = pref.getString("name"+i, "null");
+				if(pref.contains("time"+i))	players[i].time = pref.getLong("time"+i, 0);
+			}
 		} catch (Exception e){
 		}
 	}
