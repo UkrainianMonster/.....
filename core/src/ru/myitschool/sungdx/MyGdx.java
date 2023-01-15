@@ -3,6 +3,7 @@ package ru.myitschool.sungdx;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -146,6 +147,7 @@ public class MyGdx extends ApplicationAdapter {
 				players[players.length-1].time = player.time;
 				players[players.length-1].name = player.name;
 				sortPlayers();
+				saveTableOfRecords();
 			}
 
 			@Override
@@ -188,5 +190,17 @@ public class MyGdx extends ApplicationAdapter {
 			s += players[i].name+"........"+timeToString(players[i].time)+"\n";
 		}
 		return s;
+	}
+
+	void saveTableOfRecords(){
+		try {
+			Preferences pref = Gdx.app.getPreferences("TableOfRecords");
+			for (int i = 0; i < players.length; i++) {
+				pref.putString("name"+i, players[i].name);
+				pref.putLong("time"+i, players[i].time);
+			}
+			pref.flush();
+		} catch (Exception e){
+		}
 	}
 }
