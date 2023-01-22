@@ -23,6 +23,7 @@ public class MyGdx extends ApplicationAdapter {
 	OrthographicCamera camera;
 	Vector3 touch;
 	BitmapFont font;
+	InputKeyboard inputKeyboard;
 
 	Texture[] imgMosq = new Texture[11];
 	Texture imgBG;
@@ -33,7 +34,8 @@ public class MyGdx extends ApplicationAdapter {
 	Player player;
 	int frags;
 	long timeStart, timeCurrent;
-	boolean gameOver = false;
+	public static final int PLAY_GAME = 0, ENTER_NAME = 1, SHOW_TABLE = 2;
+	int condition = PLAY_GAME;
 	
 	@Override
 	public void create () {
@@ -43,6 +45,7 @@ public class MyGdx extends ApplicationAdapter {
 		camera.setToOrtho(false, SCR_WIDTH, SCR_HEIGHT);
 		touch = new Vector3();
 		generateFont();
+		inputKeyboard = new InputKeyboard(SCR_WIDTH, SCR_HEIGHT, 10);
 
 		// создание изображений
 		imgBG = new Texture("background.jpg");
@@ -70,9 +73,10 @@ public class MyGdx extends ApplicationAdapter {
 		if(Gdx.input.justTouched()){
 			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touch);
-			if(gameOver){
+			if(condition == SHOW_TABLE){
 				gameStart();
-			} else {
+			}
+			if(condition == PLAY_GAME){
 				for (int i = mosq.length - 1; i >= 0; i--) {
 					if (mosq[i].isAlive && mosq[i].hit(touch.x, touch.y)) {
 						frags++;
@@ -82,14 +86,27 @@ public class MyGdx extends ApplicationAdapter {
 					}
 				}
 			}
+			if(condition == ENTER_NAME){
+				inputKeyboard.hit(touch.x, touch.y);
+			}
 		}
 
 		// события игры
 		for (int i = 0; i < mosq.length; i++) {
 			mosq[i].move();
 		}
-		if(!gameOver) {
+		if(condition == PLAY_GAME) {
 			timeCurrent = TimeUtils.millis() - timeStart;
+		}
+		if(condition == ENTER_NAME) {
+			if(inputKeyboard.endOfEdit()){
+				player.name = inputKeyboard.getText();
+				players[players.length-1].time = player.time;
+				players[players.length-1].name = player.name;
+				sortPlayers();
+				saveTableOfRecords();
+				condition = SHOW_TABLE;
+			}
 		}
 
 		// отрисовка всей графики
@@ -100,9 +117,10 @@ public class MyGdx extends ApplicationAdapter {
 		for (int i = 0; i < mosq.length; i++) {
 			batch.draw(imgMosq[mosq[i].faza], mosq[i].getX(), mosq[i].getY(), mosq[i].width, mosq[i].height, 0, 0, 500, 500, mosq[i].isFlip(), false);
 		}
-		font.draw(batch, "УБИЙСТВА: "+frags, 10, SCR_HEIGHT-10);
+		font.draw(batch, "KILLS: "+frags, 10, SCR_HEIGHT-10);
 		font.draw(batch, timeToString(timeCurrent), SCR_WIDTH-200, SCR_HEIGHT-10);
-		if(gameOver) font.draw(batch, tableOfRecordsToString(), SCR_WIDTH/3f, SCR_HEIGHT/4f*3);
+		if(condition == ENTER_NAME) inputKeyboard.drawKBD(batch);
+		if(condition == SHOW_TABLE) font.draw(batch, tableOfRecordsToString(), SCR_WIDTH/3f, SCR_HEIGHT/4f*3);
 		batch.end();
 	}
 	
@@ -112,6 +130,11 @@ public class MyGdx extends ApplicationAdapter {
 		for (int i = 0; i < imgMosq.length; i++) {
 			imgMosq[i].dispose();
 		}
+		imgBG.dispose();
+		for (int i = 0; i < sndMosq.length; i++) {
+			sndMosq[i].dispose();
+		}
+		inputKeyboard.dispose();
 	}
 
 	void generateFont(){
@@ -137,29 +160,12 @@ public class MyGdx extends ApplicationAdapter {
 	}
 
 	void gameOver(){
-		gameOver = true;
+		condition = ENTER_NAME;
 		player.time = timeCurrent;
-
-		class MyTextListener implements Input.TextInputListener{
-			@Override
-			public void input(String text) {
-				player.name = text;
-				players[players.length-1].time = player.time;
-				players[players.length-1].name = player.name;
-				sortPlayers();
-				saveTableOfRecords();
-			}
-
-			@Override
-			public void canceled() {
-
-			}
-		}
-		Gdx.input.getTextInput(new MyTextListener(), "Введите имя", player.name, "");
 	}
 
 	void gameStart(){
-		gameOver = false;
+		condition = PLAY_GAME;
 		frags = 0;
 		timeStart = TimeUtils.millis();
 		// создание комаров
