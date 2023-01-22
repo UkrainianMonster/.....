@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class MyGdx extends ApplicationAdapter {
@@ -120,7 +121,7 @@ public class MyGdx extends ApplicationAdapter {
 		font.draw(batch, "KILLS: "+frags, 10, SCR_HEIGHT-10);
 		font.draw(batch, timeToString(timeCurrent), SCR_WIDTH-200, SCR_HEIGHT-10);
 		if(condition == ENTER_NAME) inputKeyboard.drawKBD(batch);
-		if(condition == SHOW_TABLE) font.draw(batch, tableOfRecordsToString(), SCR_WIDTH/3f, SCR_HEIGHT/4f*3);
+		if(condition == SHOW_TABLE) font.draw(batch, tableOfRecordsToString(), 0, SCR_HEIGHT/4f*3, SCR_WIDTH, Align.center, true);
 		batch.end();
 	}
 	
@@ -138,7 +139,7 @@ public class MyGdx extends ApplicationAdapter {
 	}
 
 	void generateFont(){
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mr_insulag.otf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ubuntumono.ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.color = new Color(1, 0.8f, 0.4f, 1);
 		parameter.size = 50;
@@ -151,6 +152,7 @@ public class MyGdx extends ApplicationAdapter {
 		for (char i = 0x20; i < 0x7B; i++) str += i;
 		for (char i = 0x401; i < 0x452; i++) str += i;
 		parameter.characters = str;
+		//parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 		font = generator.generateFont(parameter);
 		generator.dispose();
 	}
@@ -193,7 +195,7 @@ public class MyGdx extends ApplicationAdapter {
 	String tableOfRecordsToString(){
 		String s = "";
 		for (int i = 0; i < players.length-1; i++) {
-			s += players[i].name+"........"+timeToString(players[i].time)+"\n";
+			s += players[i].name+points(players[i].name, 13)+timeToString(players[i].time)+"\n";
 		}
 		return s;
 	}
@@ -219,5 +221,12 @@ public class MyGdx extends ApplicationAdapter {
 			}
 		} catch (Exception e){
 		}
+	}
+
+	String points(String name, int length){
+		int n = length-name.length();
+		String s = "";
+		for (int i = 0; i < n; i++) s += ".";
+		return s;
 	}
 }
