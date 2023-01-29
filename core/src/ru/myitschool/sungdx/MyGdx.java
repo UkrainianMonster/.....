@@ -72,11 +72,9 @@ public class MyGdx extends Game {
 		parameter.characters = str;
 		//parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 		font = generator.generateFont(parameter);
-		parameter.size = 70;
-		parameter.color = Color.BLUE;
+		parameter.size = 60;
 		fontLarge = generator.generateFont(parameter);
 		generator.dispose();
-
 	}
 
 }
