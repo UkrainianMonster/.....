@@ -28,6 +28,7 @@ public class MyGdx extends Game {
 
 	ScreenGame screenGame;
 	ScreenIntro screenIntro;
+	ScreenSettings screenSettings;
 	
 	@Override
 	public void create () {
@@ -40,6 +41,7 @@ public class MyGdx extends Game {
 
 		screenGame = new ScreenGame(this);
 		screenIntro = new ScreenIntro(this);
+		screenSettings = new ScreenSettings(this);
 		setScreen(screenIntro);
 	}
 	
