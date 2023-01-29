@@ -47,18 +47,16 @@ public class ScreenGame implements Screen {
             players[i] = new Player("Никто", 0);
         }
         player = new Player("Gamer", 0);
-
-        gameStart();
     }
 
     @Override
     public void show() {
-
+        gameStart();
     }
 
     @Override
     public void render(float delta) {
-// обработка касаний экрана
+    // обработка касаний экрана
         if(Gdx.input.justTouched()){
             c.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             c.camera.unproject(c.touch);

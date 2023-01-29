@@ -39,8 +39,8 @@ public class MyGdx extends Game {
 		generateFont();
 
 		screenGame = new ScreenGame(this);
-		screenIntro = new ScreenIntro();
-		setScreen(screenGame);
+		screenIntro = new ScreenIntro(this);
+		setScreen(screenIntro);
 	}
 	
 	@Override
