@@ -26,6 +26,7 @@ public class ScreenGame implements Screen {
     long timeStart, timeCurrent;
     public static final int PLAY_GAME = 0, ENTER_NAME = 1, SHOW_TABLE = 2;
     int condition = PLAY_GAME;
+    TextButton btnExit;
 
     public ScreenGame(MyGdx context){
         c = context;
@@ -47,6 +48,8 @@ public class ScreenGame implements Screen {
             players[i] = new Player("Никто", 0);
         }
         player = new Player("Gamer", 0);
+
+        btnExit = new TextButton(c.font, "Exit", 200);
     }
 
     @Override
@@ -61,7 +64,8 @@ public class ScreenGame implements Screen {
             c.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             c.camera.unproject(c.touch);
             if(condition == SHOW_TABLE){
-                gameStart();
+                if(btnExit.hit(c.touch.x, c.touch.y)) c.setScreen(c.screenIntro);
+                else gameStart();
             }
             if(condition == PLAY_GAME){
                 for (int i = mosq.length - 1; i >= 0; i--) {
@@ -104,7 +108,10 @@ public class ScreenGame implements Screen {
         c.font.draw(c.batch, "KILLS: "+frags, 10, SCR_HEIGHT-10);
         c.font.draw(c.batch, timeToString(timeCurrent), SCR_WIDTH-200, SCR_HEIGHT-10);
         if(condition == ENTER_NAME) inputKeyboard.draw(c.batch);
-        if(condition == SHOW_TABLE) c.font.draw(c.batch, tableOfRecordsToString(), 0, SCR_HEIGHT/4f*3, SCR_WIDTH, Align.center, true);
+        if(condition == SHOW_TABLE) {
+            c.font.draw(c.batch, tableOfRecordsToString(), 0, SCR_HEIGHT / 4f * 3, SCR_WIDTH, Align.center, true);
+            btnExit.font.draw(c.batch, btnExit.text, btnExit.x, btnExit.y);
+        }
         c.batch.end();
     }
 
