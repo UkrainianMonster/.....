@@ -24,7 +24,7 @@ public class MyGdx extends Game {
 	SpriteBatch batch;
 	OrthographicCamera camera;
 	Vector3 touch;
-	BitmapFont font;
+	BitmapFont font, fontLarge;
 
 	ScreenGame screenGame;
 	ScreenIntro screenIntro;
@@ -57,10 +57,10 @@ public class MyGdx extends Game {
 	}
 
 	void generateFont(){
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ubuntumono.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("mr_insulag.otf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.color = new Color(1, 0.8f, 0.4f, 1);
-		parameter.size = 50;
+		parameter.size = 45;
 		parameter.borderColor = Color.BLACK;
 		parameter.borderWidth = 2;
 		parameter.borderStraight = true;
@@ -72,7 +72,11 @@ public class MyGdx extends Game {
 		parameter.characters = str;
 		//parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 		font = generator.generateFont(parameter);
+		parameter.size = 70;
+		parameter.color = Color.BLUE;
+		fontLarge = generator.generateFont(parameter);
 		generator.dispose();
+
 	}
 
 }
