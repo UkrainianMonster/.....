@@ -27,6 +27,7 @@ public class ScreenGame implements Screen {
     public static final int PLAY_GAME = 0, ENTER_NAME = 1, SHOW_TABLE = 2;
     int condition = PLAY_GAME;
     TextButton btnExit;
+    boolean soundOn = true;
 
     public ScreenGame(MyGdx context){
         c = context;
@@ -71,7 +72,7 @@ public class ScreenGame implements Screen {
                 for (int i = mosq.length - 1; i >= 0; i--) {
                     if (mosq[i].isAlive && mosq[i].hit(c.touch.x, c.touch.y)) {
                         frags++;
-                        sndMosq[MathUtils.random(0, 2)].play();
+                        if(soundOn) sndMosq[MathUtils.random(0, 2)].play();
                         if (frags == mosq.length) gameOver();
                         break;
                     }

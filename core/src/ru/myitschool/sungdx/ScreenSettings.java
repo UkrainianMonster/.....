@@ -13,15 +13,15 @@ public class ScreenSettings implements Screen {
 
     Texture imgBG;
 
-    TextButton btnPlay, btnSettings, btnAbout, btnExit;
+    TextButton btnSound, btnMusic, btnLanguage, btnExit;
 
     public ScreenSettings(MyGdx context){
         c = context;
         // создание изображений
         imgBG = new Texture("winter2.jpg");
-        btnPlay = new TextButton(c.fontLarge, "ЗВУК", 600, 650);
-        btnSettings = new TextButton(c.fontLarge, "МУЗЫКА", 600, 550);
-        btnAbout = new TextButton(c.fontLarge, "ЧТО-ТО", 600, 450);
+        btnSound = new TextButton(c.fontLarge, "ЗВУК ВКЛ", 600, 650);
+        btnMusic = new TextButton(c.fontLarge, "МУЗЫКА", 600, 550);
+        btnLanguage = new TextButton(c.fontLarge, "ЯЗЫК", 600, 450);
         btnExit = new TextButton(c.fontLarge, "ВЫХОД", 600, 350);
     }
 
@@ -36,6 +36,11 @@ public class ScreenSettings implements Screen {
         if(Gdx.input.justTouched()) {
             c.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             c.camera.unproject(c.touch);
+            if(btnSound.hit(c.touch.x, c.touch.y)) {
+                c.screenGame.soundOn = !c.screenGame.soundOn;
+                if(c.screenGame.soundOn) btnSound.text = "ЗВУК ВКЛ";
+                else btnSound.text = "ЗВУК ВЫКЛ";
+            }
             if(btnExit.hit(c.touch.x, c.touch.y)) {
                 c.setScreen(c.screenIntro);
             }
@@ -45,9 +50,9 @@ public class ScreenSettings implements Screen {
         c.batch.setProjectionMatrix(c.camera.combined);
         c.batch.begin();
         c.batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        btnPlay.font.draw(c.batch, btnPlay.text, btnPlay.x, btnPlay.y);
-        btnSettings.font.draw(c.batch, btnSettings.text, btnSettings.x, btnSettings.y);
-        btnAbout.font.draw(c.batch, btnAbout.text, btnAbout.x, btnAbout.y);
+        btnSound.font.draw(c.batch, btnSound.text, btnSound.x, btnSound.y);
+        btnMusic.font.draw(c.batch, btnMusic.text, btnMusic.x, btnMusic.y);
+        btnLanguage.font.draw(c.batch, btnLanguage.text, btnLanguage.x, btnLanguage.y);
         btnExit.font.draw(c.batch, btnExit.text, btnExit.x, btnExit.y);
         c.batch.end();
     }
