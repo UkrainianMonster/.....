@@ -3,8 +3,10 @@ package ru.myitschool.sungdx;
 import static ru.myitschool.sungdx.MyGdx.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
@@ -56,6 +58,7 @@ public class ScreenGame implements Screen {
     @Override
     public void show() {
         gameStart();
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
 
     @Override
@@ -88,6 +91,9 @@ public class ScreenGame implements Screen {
                     condition = SHOW_TABLE;
                 }
             }
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            c.setScreen(c.screenIntro);
         }
 
         // события игры
@@ -207,7 +213,7 @@ public class ScreenGame implements Screen {
 
     @Override
     public void hide() {
-
+        Gdx.input.setCatchKey(Input.Keys.BACK, false);
     }
 
     @Override
