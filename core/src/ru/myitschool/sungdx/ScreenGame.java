@@ -21,7 +21,7 @@ public class ScreenGame implements Screen {
 
     Texture[] imgMosq = new Texture[11];
     Texture imgBG;
-    Sound[] sndMosq = new Sound[3];
+    Sound[] sndMosq = new Sound[5];
 
     ArrayList<Mosquito> mosq = new ArrayList<>();
     int nMosquitos = 5;
@@ -214,6 +214,7 @@ public class ScreenGame implements Screen {
 
     @Override
     public void resume() {
+
 
     }
 
