@@ -90,7 +90,7 @@ public class MyGdx extends Game {
 	void setAllText(){
 		text.put("Exit", new String[]{"Exit", "Выход"});
 		text.put("EXIT", new String[]{"EXIT", "ВЫХОД"});
-		text.put("KILLS", new String[]{"KILLS: ", "СБИТО: "});
+		text.put("SPANKED", new String[]{"SPANKED: ", "СБИТО: "});
 		text.put("PLAY", new String[]{"PLAY", "ИГРАТЬ"});
 		text.put("SETTINGS", new String[]{"SETTINGS", "НАСТРОЙКИ"});
 		text.put("ABOUT", new String[]{"ABOUT", "ОБ ИГРЕ"});

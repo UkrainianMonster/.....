@@ -24,7 +24,7 @@ public class ScreenGame implements Screen {
     Sound[] sndMosq = new Sound[5];
 
     ArrayList<Mosquito> mosq = new ArrayList<>();
-    int nMosquitos = 5;
+    int nMosquitos = 100;
 
     Player[] players = new Player[6];
     Player player;
@@ -117,7 +117,7 @@ public class ScreenGame implements Screen {
         for (int i = 0; i < mosq.size(); i++) {
             c.batch.draw(imgMosq[mosq.get(i).faza], mosq.get(i).getX(), mosq.get(i).getY(), mosq.get(i).width, mosq.get(i).height, 0, 0, 500, 500, mosq.get(i).isFlip(), false);
         }
-        c.font.draw(c.batch, c.text.get("KILLS")[c.lang]+frags, 10, SCR_HEIGHT-10);
+        c.font.draw(c.batch, c.text.get("SPANKED")[c.lang]+frags, 10, SCR_HEIGHT-10);
         c.font.draw(c.batch, timeToString(timeCurrent), SCR_WIDTH-200, SCR_HEIGHT-10);
         if(condition == ENTER_NAME) inputKeyboard.draw(c.batch);
         if(condition == SHOW_TABLE) {
