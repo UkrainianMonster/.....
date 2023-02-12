@@ -40,7 +40,7 @@ public class ScreenGame implements Screen {
         c = context;
         inputKeyboard = new InputKeyboard(SCR_WIDTH, SCR_HEIGHT, 10);
 
-        // создание изображений
+        // создание всех изображений
         imgBG = new Texture("background.jpg");
         for (int i = 0; i < imgMosq.length; i++) {
             imgMosq[i] = new Texture("mosq"+i+".png");
