@@ -19,10 +19,10 @@ public class ScreenSettings implements Screen {
         c = context;
         // создание изображений
         imgBG = new Texture("winter2.jpg");
-        btnSound = new TextButton(c.fontLarge, "ЗВУК ВКЛ", 600, 650);
-        btnMusic = new TextButton(c.fontLarge, "МУЗЫКА", 600, 550);
-        btnLanguage = new TextButton(c.fontLarge, "ЯЗЫК", 600, 450);
-        btnExit = new TextButton(c.fontLarge, "ВЫХОД", 600, 350);
+        btnSound = new TextButton(c.fontLarge, "SOUND ON", 600, 650);
+        btnMusic = new TextButton(c.fontLarge, "MUSIC OFF", 600, 550);
+        btnLanguage = new TextButton(c.fontLarge, "LANGUAGE", 600, 450);
+        btnExit = new TextButton(c.fontLarge, "EXIT", 600, 350);
     }
 
     @Override
@@ -38,8 +38,16 @@ public class ScreenSettings implements Screen {
             c.camera.unproject(c.touch);
             if(btnSound.hit(c.touch.x, c.touch.y)) {
                 c.screenGame.soundOn = !c.screenGame.soundOn;
-                if(c.screenGame.soundOn) btnSound.text = "ЗВУК ВКЛ";
-                else btnSound.text = "ЗВУК ВЫКЛ";
+                if(c.screenGame.soundOn) btnSound.text = "SOUND ON";
+                else btnSound.text = "SOUND OFF";
+            }
+            if(btnMusic.hit(c.touch.x, c.touch.y)) {
+                c.screenGame.musicOn = !c.screenGame.musicOn;
+                if(c.screenGame.musicOn) btnMusic.text = "MUSIC ON";
+                else btnMusic.text = "MUSIC OFF";
+            }
+            if(btnLanguage.hit(c.touch.x, c.touch.y)) {
+                c.lang = c.lang==0 ? 1 : 0;
             }
             if(btnExit.hit(c.touch.x, c.touch.y)) {
                 c.setScreen(c.screenIntro);
@@ -50,10 +58,10 @@ public class ScreenSettings implements Screen {
         c.batch.setProjectionMatrix(c.camera.combined);
         c.batch.begin();
         c.batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        btnSound.font.draw(c.batch, btnSound.text, btnSound.x, btnSound.y);
-        btnMusic.font.draw(c.batch, btnMusic.text, btnMusic.x, btnMusic.y);
-        btnLanguage.font.draw(c.batch, btnLanguage.text, btnLanguage.x, btnLanguage.y);
-        btnExit.font.draw(c.batch, btnExit.text, btnExit.x, btnExit.y);
+        btnSound.font.draw(c.batch, c.text.get(btnSound.text)[c.lang], btnSound.x, btnSound.y);
+        btnMusic.font.draw(c.batch, c.text.get(btnMusic.text)[c.lang], btnMusic.x, btnMusic.y);
+        btnLanguage.font.draw(c.batch, c.text.get(btnLanguage.text)[c.lang], btnLanguage.x, btnLanguage.y);
+        btnExit.font.draw(c.batch, c.text.get(btnExit.text)[c.lang], btnExit.x, btnExit.y);
         c.batch.end();
     }
 

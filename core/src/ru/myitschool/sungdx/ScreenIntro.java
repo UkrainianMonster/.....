@@ -19,10 +19,10 @@ public class ScreenIntro implements Screen {
         c = context;
         // создание изображений
         imgBG = new Texture("winter1.jpg");
-        btnPlay = new TextButton(c.fontLarge, "ИГРАТЬ", 650);
-        btnSettings = new TextButton(c.fontLarge, "НАСТРОЙКИ", 550);
-        btnAbout = new TextButton(c.fontLarge, "ОБ ИГРЕ", 450);
-        btnExit = new TextButton(c.fontLarge, "ВЫХОД", 350);
+        btnPlay = new TextButton(c.fontLarge, "PLAY", 650);
+        btnSettings = new TextButton(c.fontLarge, "SETTINGS", 550);
+        btnAbout = new TextButton(c.fontLarge, "ABOUT", 450);
+        btnExit = new TextButton(c.fontLarge, "EXIT", 350);
     }
 
     @Override
@@ -51,10 +51,10 @@ public class ScreenIntro implements Screen {
         c.batch.setProjectionMatrix(c.camera.combined);
         c.batch.begin();
         c.batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        btnPlay.font.draw(c.batch, btnPlay.text, btnPlay.x, btnPlay.y);
-        btnSettings.font.draw(c.batch, btnSettings.text, btnSettings.x, btnSettings.y);
-        btnAbout.font.draw(c.batch, btnAbout.text, btnAbout.x, btnAbout.y);
-        btnExit.font.draw(c.batch, btnExit.text, btnExit.x, btnExit.y);
+        btnPlay.font.draw(c.batch, c.text.get(btnPlay.text)[c.lang], btnPlay.x, btnPlay.y);
+        btnSettings.font.draw(c.batch, c.text.get(btnSettings.text)[c.lang], btnSettings.x, btnSettings.y);
+        btnAbout.font.draw(c.batch, c.text.get(btnAbout.text)[c.lang], btnAbout.x, btnAbout.y);
+        btnExit.font.draw(c.batch, c.text.get(btnExit.text)[c.lang], btnExit.x, btnExit.y);
         c.batch.end();
     }
 

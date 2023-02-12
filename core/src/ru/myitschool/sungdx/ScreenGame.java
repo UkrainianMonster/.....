@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import java.util.ArrayList;
+
 public class ScreenGame implements Screen {
     MyGdx c;
     InputKeyboard inputKeyboard;
@@ -21,7 +23,9 @@ public class ScreenGame implements Screen {
     Texture imgBG;
     Sound[] sndMosq = new Sound[3];
 
-    Mosquito[] mosq = new Mosquito[5];
+    ArrayList<Mosquito> mosq = new ArrayList<>();
+    int nMosquitos = 5;
+
     Player[] players = new Player[6];
     Player player;
     int frags;
@@ -30,6 +34,7 @@ public class ScreenGame implements Screen {
     int condition = PLAY_GAME;
     TextButton btnExit;
     boolean soundOn = true;
+    boolean musicOn = false;
 
     public ScreenGame(MyGdx context){
         c = context;
@@ -48,7 +53,7 @@ public class ScreenGame implements Screen {
 
         // создание игроков для таблицы рекордов
         for (int i = 0; i < players.length; i++) {
-            players[i] = new Player("Никто", 0);
+            players[i] = new Player("Nobody", 0);
         }
         player = new Player("Gamer", 0);
 
@@ -72,11 +77,11 @@ public class ScreenGame implements Screen {
                 else gameStart();
             }
             if(condition == PLAY_GAME){
-                for (int i = mosq.length - 1; i >= 0; i--) {
-                    if (mosq[i].isAlive && mosq[i].hit(c.touch.x, c.touch.y)) {
+                for (int i = mosq.size() - 1; i >= 0; i--) {
+                    if (mosq.get(i).isAlive && mosq.get(i).hit(c.touch.x, c.touch.y)) {
                         frags++;
                         if(soundOn) sndMosq[MathUtils.random(0, 2)].play();
-                        if (frags == mosq.length) gameOver();
+                        if (frags == mosq.size()) gameOver();
                         break;
                     }
                 }
@@ -97,8 +102,8 @@ public class ScreenGame implements Screen {
         }
 
         // события игры
-        for (int i = 0; i < mosq.length; i++) {
-            mosq[i].move();
+        for (int i = 0; i < mosq.size(); i++) {
+            mosq.get(i).move();
         }
         if(condition == PLAY_GAME) {
             timeCurrent = TimeUtils.millis() - timeStart;
@@ -109,15 +114,15 @@ public class ScreenGame implements Screen {
         c.batch.setProjectionMatrix(c.camera.combined);
         c.batch.begin();
         c.batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
-        for (int i = 0; i < mosq.length; i++) {
-            c.batch.draw(imgMosq[mosq[i].faza], mosq[i].getX(), mosq[i].getY(), mosq[i].width, mosq[i].height, 0, 0, 500, 500, mosq[i].isFlip(), false);
+        for (int i = 0; i < mosq.size(); i++) {
+            c.batch.draw(imgMosq[mosq.get(i).faza], mosq.get(i).getX(), mosq.get(i).getY(), mosq.get(i).width, mosq.get(i).height, 0, 0, 500, 500, mosq.get(i).isFlip(), false);
         }
-        c.font.draw(c.batch, "KILLS: "+frags, 10, SCR_HEIGHT-10);
+        c.font.draw(c.batch, c.text.get("KILLS")[c.lang]+frags, 10, SCR_HEIGHT-10);
         c.font.draw(c.batch, timeToString(timeCurrent), SCR_WIDTH-200, SCR_HEIGHT-10);
         if(condition == ENTER_NAME) inputKeyboard.draw(c.batch);
         if(condition == SHOW_TABLE) {
             c.font.draw(c.batch, tableOfRecordsToString(), 0, SCR_HEIGHT / 4f * 3, SCR_WIDTH, Align.center, true);
-            btnExit.font.draw(c.batch, btnExit.text, btnExit.x, btnExit.y);
+            btnExit.font.draw(c.batch, c.text.get(btnExit.text)[c.lang], btnExit.x, btnExit.y);
         }
         c.batch.end();
     }
@@ -136,8 +141,9 @@ public class ScreenGame implements Screen {
         frags = 0;
         timeStart = TimeUtils.millis();
         // создание комаров
-        for (int i = 0; i < mosq.length; i++) {
-            mosq[i] = new Mosquito();
+        mosq.clear();
+        for (int i = 0; i < nMosquitos; i++) {
+            mosq.add(new Mosquito());
         }
         loadTableOfRecords();
     }
